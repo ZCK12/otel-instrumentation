@@ -8,7 +8,6 @@ import (
     "go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
     "go.opentelemetry.io/otel/metric"
     "go.opentelemetry.io/otel/sdk/resource"
-    semconv "go.opentelemetry.io/otel/semconv/v1.12.0"
     metricsdk "go.opentelemetry.io/otel/sdk/metric"
 )
 
@@ -18,8 +17,6 @@ const SCHEMA_URL = "https://opentelemetry.io/schemas/1.26.0"
 // MeterConfig includes any parameters you want to allow callers
 // to override when creating a MeterProvider.
 type MeterConfig struct {
-    ServiceName    string
-    ServiceVersion string
     Endpoint       string
     Insecure       bool
     ExportInterval time.Duration
@@ -29,7 +26,7 @@ type MeterConfig struct {
 // This is the main entry point to set up telemetry in your services.
 func NewMeterProvider(ctx context.Context, cfg MeterConfig) (metric.MeterProvider, error) {
     // Create a resource describing this service/application.
-    res, err := newResource(ctx, cfg)
+    res, err := newResource(ctx)
     if err != nil {
         return nil, fmt.Errorf("could not create resource: %w", err)
     }
@@ -56,15 +53,10 @@ func NewMeterProvider(ctx context.Context, cfg MeterConfig) (metric.MeterProvide
 }
 
 // newResource sets important attributes for the telemetry data.
-func newResource(ctx context.Context, cfg MeterConfig) (*resource.Resource, error) {
+func newResource(ctx context.Context) (*resource.Resource, error) {
     return resource.New(
         ctx,
         resource.WithSchemaURL(SCHEMA_URL),
-        resource.WithOSType(),
-        resource.WithAttributes(
-            semconv.ServiceNameKey.String(cfg.ServiceName),
-            semconv.ServiceVersionKey.String(cfg.ServiceVersion),
-        ),
     )
 }
 

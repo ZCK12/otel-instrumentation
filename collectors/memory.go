@@ -5,10 +5,11 @@ import (
     "runtime"
 
     "go.opentelemetry.io/otel/metric"
+    "go.opentelemetry.io/otel/attribute"
 )
 
 // Register an ObservableGauge for process_memory_usage_mb
-func RegisterMemoryMetricsCollector(meter metric.Meter) {
+func RegisterMemoryMetricsCollector(meter metric.Meter, attr []attribute.KeyValue) {
     const Mb = 1024 * 1024
 
     meter.Float64ObservableGauge(
@@ -18,7 +19,7 @@ func RegisterMemoryMetricsCollector(meter metric.Meter) {
                 var memStats runtime.MemStats
                 runtime.ReadMemStats(&memStats)
                 allocatedMB := float64(memStats.Alloc) / float64(Mb)
-                obs.Observe(allocatedMB)
+                obs.Observe(allocatedMB, metric.WithAttributes(attr))
                 return nil
             },
         ),
