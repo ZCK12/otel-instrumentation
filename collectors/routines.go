@@ -15,7 +15,7 @@ func RegisterGoroutinesMetricsCollector(meter metric.Meter, attr []attribute.Key
         metric.WithInt64Callback(
             func(ctx context.Context, obs metric.Int64Observer) error {
                 goroutineCount := int64(runtime.NumGoroutine())
-                obs.Observe(goroutineCount, metric.WithAttributes(attr))
+                obs.Observe(goroutineCount, metric.WithAttributes(attr...))
                 return nil
             },
         ),

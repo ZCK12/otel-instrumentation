@@ -17,7 +17,7 @@ func RegisterUptimeMetricsCollector(meter metric.Meter, attr []attribute.KeyValu
         metric.WithFloat64Callback(
             func(ctx context.Context, obs metric.Float64Observer) error {
                 uptime := time.Since(startTime).Seconds()
-                obs.Observe(uptime, metric.WithAttributes(attr))
+                obs.Observe(uptime, metric.WithAttributes(attr...))
                 return nil
             },
         ),

@@ -19,7 +19,7 @@ func RegisterMemoryMetricsCollector(meter metric.Meter, attr []attribute.KeyValu
                 var memStats runtime.MemStats
                 runtime.ReadMemStats(&memStats)
                 allocatedMB := float64(memStats.Alloc) / float64(Mb)
-                obs.Observe(allocatedMB, metric.WithAttributes(attr))
+                obs.Observe(allocatedMB, metric.WithAttributes(attr...))
                 return nil
             },
         ),
