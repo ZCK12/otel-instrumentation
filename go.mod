@@ -1,4 +1,4 @@
-module pgcontrollerv2/canary-metrics-otel
+module github.com/ZCK12/otel-instrumentation
 
 go 1.23.4
 
