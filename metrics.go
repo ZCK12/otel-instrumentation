@@ -1,4 +1,3 @@
-// telemetry/metrics.go
 package telemetry
 
 import (
@@ -30,7 +29,7 @@ type MeterConfig struct {
 // This is the main entry point to set up telemetry in your services.
 func NewMeterProvider(ctx context.Context, cfg MeterConfig) (metric.MeterProvider, error) {
     // Create a resource describing this service/application.
-    res, err := newResource(cfg)
+    res, err := newResource(ctx, cfg)
     if err != nil {
         return nil, fmt.Errorf("could not create resource: %w", err)
     }
@@ -57,15 +56,14 @@ func NewMeterProvider(ctx context.Context, cfg MeterConfig) (metric.MeterProvide
 }
 
 // newResource sets important attributes for the telemetry data.
-func newResource(cfg MeterConfig) (*resource.Resource, error) {
+func newResource(ctx context.Context, cfg MeterConfig) (*resource.Resource, error) {
     return resource.New(
-        // Always specify the correct schema URL.
+        ctx,
         resource.WithSchemaURL(SCHEMA_URL),
+        resource.WithOSType(),
         resource.WithAttributes(
             semconv.ServiceNameKey.String(cfg.ServiceName),
             semconv.ServiceVersionKey.String(cfg.ServiceVersion),
-            // Add other default or optional attributes here, if desired.
-            semconv.DeploymentEnvironmentKey.String("development"),
         ),
     )
 }
