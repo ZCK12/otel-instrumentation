@@ -3,9 +3,7 @@ package collectors
 import (
     "context"
     "runtime"
-    "time"
 
-    "go.opentelemetry.io/otel/attribute"
     "go.opentelemetry.io/otel/metric"
 )
 
@@ -20,7 +18,6 @@ func RegisterMemoryMetricsCollector(meter metric.Meter) {
                 var memStats runtime.MemStats
                 runtime.ReadMemStats(&memStats)
                 allocatedMB := float64(memStats.Alloc) / float64(Mb)
-
                 obs.Observe(allocatedMB)
                 return nil
             },

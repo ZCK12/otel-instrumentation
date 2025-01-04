@@ -3,9 +3,7 @@ package collectors
 import (
     "context"
     "runtime"
-    "time"
 
-    "go.opentelemetry.io/otel/attribute"
     "go.opentelemetry.io/otel/metric"
 )
 
@@ -13,10 +11,10 @@ import (
 func RegisterGoroutinesMetricsCollector(meter metric.Meter) {
     meter.Int64ObservableGauge(
         "service_goroutine_count",
-        metric.WithFloat64Callback(
+        metric.WithInt64Callback(
             func(ctx context.Context, obs metric.Int64Observer) error {
-                goroutineCount := int64(memStats.NumGoroutine())
-                obs.Observe(allocatedMB)
+                goroutineCount := int64(runtime.NumGoroutine())
+                obs.Observe(goroutineCount)
                 return nil
             },
         ),

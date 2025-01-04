@@ -4,7 +4,6 @@ import (
     "context"
     "time"
 
-    "go.opentelemetry.io/otel/attribute"
     "go.opentelemetry.io/otel/metric"
 )
 
